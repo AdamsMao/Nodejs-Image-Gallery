@@ -1,0 +1,32 @@
+
+
+	<fieldset>
+		<legend> Download Panel</legend>
+		<div>
+				<a class="btn btn-primary" href="/" id="home" > Back Home </a>	
+		</div>	
+		<br><br>	
+		<div class='inner' id='inner'>				
+		</div>
+	</fieldset>
+
+
+<link href="/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="/stylesheets/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+<script src="/javascripts/bootstrap.min.js"></script>
+<script src="/javascripts/jQuery-1.7.1.js"></script>
+
+<script>
+	$(document).ready(function(){
+		//
+		$.ajax({
+			type: 'GET',
+			url: '/get_files'
+		}).done(function( data ) {
+			$.each(data, function(n, v) {
+				$('#inner').append("<div> <img src='/download/" + v + "' class='btn btn-link' /> " + v  + "</div>");
+			});
+		});	
+	});
+</script>
+

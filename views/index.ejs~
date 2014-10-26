@@ -1,0 +1,23 @@
+
+<center>
+	<fieldset>
+		<legend> Image Management </legend>
+		<div class="control-group">
+			<div class="controls">
+				<a class="btn btn-primary" href="/upload" id="upload" >Upload</a>					
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<a class="btn btn-primary" href="/download_page" id="download_page" > Download</a>	
+			</div>
+		</div>
+	</fieldset>
+</center>
+
+
+<link href="/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="/stylesheets/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+<script src="/javascripts/bootstrap.min.js"></script>
+
+

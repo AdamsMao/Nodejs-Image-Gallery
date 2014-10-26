@@ -1,0 +1,101 @@
+<script src="/javascripts/jQuery-1.7.1.js"></script>
+
+	<div class="container-fluid">
+			<form class="form-horizontal" method="post" enctype="multipart/form-data">
+					<fieldset>
+							<legend>Image Upload</legend>
+							<div class="control-group">
+									<label class="control-label" for="username">Select File: </label>
+									<div class="controls">
+											<input type="file" class="input-xlarge" id="thumbnail" name="thumbnail">
+											<input type="button" class="btn btn-primary" id="upload" name="upload" value="Upload">
+									</div>
+							</div>
+							<br><br>
+							<div>
+									<a class="btn btn-primary" href="/" id="home" > Back Home </a>	
+							</div>
+					</fieldset>
+			</form>
+	</div>
+
+	<input type = "button" id = "btnCopy" value = "缩放图片" /></br>
+	<canvas id = "can"></canvas><br>
+	<img src = "" id="img1" /><br>
+	<script>
+		$(window).load(function(){	
+			$("#thumbnail").change(function(evt){					
+				if (!window.FileReader) return;
+				var files = evt.target.files;
+				for (var i = 0, f; f = files[i]; i++) {
+					if (!f.type.match('image.*')) {
+					    alert("not an image file!");
+					    return	;
+					}
+					var reader = new FileReader();
+					reader.onload = (function(theFile) {
+					    return function(e) {
+						// img 元素
+						document.getElementById('img1').src = e.target.result;
+					    };
+					})(f);
+					reader.readAsDataURL(f);
+				}				
+			});
+			$("#btnCopy").click(function(){
+				var canvas = document.getElementById("can");
+				var ctx = canvas.getContext("2d");
+				//var img = new Image();
+				var img = document.getElementById("img1");
+				var imgW = img.width;
+				var imgH = img.height;
+				var solidW = 800;
+				var solidH = 0;
+				if (solidW < imgW) {
+					solidH = imgH*(solidW/imgW);
+				} else {
+					solidW = imgW;
+					solidH = imgH;
+				}		
+				canvas.width = solidW;
+				canvas.height = solidH;	
+				ctx.drawImage(img,0, 0, solidW, solidH);
+			});
+			$("#upload").click(function(){
+				var canvas = document.getElementById("can");
+				//将图像输出为base64压缩的字符串  默认为image/png  
+				var data = canvas.toDataURL();    
+				//如果没有缩小图片将不上传
+				if (data.length < 5000) {
+					alert('上传前请缩放图片');
+					return;
+				}
+				                 
+				//删除字符串前的提示信息 "data:image/png;base64,"  
+				var b64 = data.substring( 22 );  
+				//POST到服务器上，生成图片    
+				var re=/[\w\u4e00-\u9fa5]/ig;  
+				var arr = ($("#thumbnail").val()).match(re); 
+				var f_name = arr.join("");
+				$.ajax({
+					type: 'POST',
+					url: '/file-upload',
+					data: {
+						imgData: b64,
+						file_name: f_name
+					}
+					
+				}).done(function( data ) {
+					alert(data);
+				});
+			});
+		});
+	</script>
+
+
+<link href="/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="/stylesheets/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+<script src="/javascripts/bootstrap.min.js"></script>
+
+
+
