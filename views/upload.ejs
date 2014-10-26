@@ -64,13 +64,12 @@
 			$("#upload").click(function(){
 				var canvas = document.getElementById("can");
 				//将图像输出为base64压缩的字符串  默认为image/png  
-				var data = canvas.toDataURL();    
+				var data = canvas.toDataURL("image/jpeg");    
 				//如果没有缩小图片将不上传
 				if (data.length < 5000) {
 					alert('上传前请缩放图片');
 					return;
-				}
-				                 
+				}				                 
 				//删除字符串前的提示信息 "data:image/png;base64,"  
 				var b64 = data.substring( 22 );  
 				//POST到服务器上，生成图片    

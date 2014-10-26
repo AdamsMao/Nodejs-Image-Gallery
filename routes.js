@@ -16,7 +16,7 @@ module.exports = function (app) {
 			var d = domain.create();
 			d.on('error', console.error);
 			d.run(function() {
-				var file_name = req.body.file_name + ".png";
+				var file_name = req.body.file_name + ".jpeg";
 				var target_path = path.join('public', 'upload', file_name);
 				var bitmap = new Buffer(req.body.imgData, 'base64');
     				// write buffer to file
@@ -26,7 +26,7 @@ module.exports = function (app) {
 				//var source = fs.createReadStream(tmp_path);
 			 	//var dest = fs.createWriteStream(target_path)
 				//source.pipe(dest);
-				res.send('File uploaded to: ' + target_path);
+				res.send('Image uploaded to: ' + target_path);
 			});
 		});
 
