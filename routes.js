@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var file_read = require('./list_files');
 var domain = require('domain');
+var jf = require('jsonfile');
 
 module.exports = function (app) {
 		app.get('/', function(req, res, next) {
@@ -26,6 +27,28 @@ module.exports = function (app) {
 				//var source = fs.createReadStream(tmp_path);
 			 	//var dest = fs.createWriteStream(target_path)
 				//source.pipe(dest);
+
+				var tagsfile = 'public/tags.json';
+				// console.log(req.body.tags.split(','));
+				var tags=req.body.tags.split(',');
+				tags.push('All');
+				jf.readFile(tagsfile,function(err,obj){
+					tags.forEach(function(tag){
+						if(! obj.hasOwnProperty(tag)){
+							obj[tag] = [file_name];
+						}
+						else{
+							obj[tag].push(file_name);
+						}
+						jf.writeFile(tagsfile, obj, function(err) {
+							console.log("write tag file : " + obj);
+  							if (err){
+  								console.log(err);
+  							}
+						});
+					});
+				});
+
 				res.send('Image uploaded to: ' + target_path);
 			});
 		});
