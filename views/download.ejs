@@ -3,8 +3,12 @@
 	<fieldset>
 		<legend> Image Viewer </legend>
 		<div>
-				<a class="btn btn-primary" href="/" id="home" > Back Home </a>	
-		</div>	
+				<a class="btn btn-primary" href="/" id="home" > Back Home </a>
+		</div>
+		<br />
+		<select class="form-control">
+  			<option>All</option>
+  		</select>
 		<br><br>	
 		<div class='inner' id='inner'>				
 		</div>
@@ -19,14 +23,50 @@
 <script>
 	$(document).ready(function(){
 		//
-		$.ajax({
+		var filesCall = function(){
+			return $.ajax({
 			type: 'GET',
 			url: '/get_files'
 		}).done(function( data ) {
-			$.each(data, function(n, v) {
-				$('#inner').append("<div> <img src='/download/" + v + "' class='btn btn-link' /> " + v  + "</div>");
+			$.getJSON("/tags.json",function(tags){
+			$.each(tags,function(key,val){
+				$("select").append("<option>"+key+"</option>")
+				});
 			});
-		});	
+			$.each(data, function(n, v) {
+				if( $("select option:selected").text() !== 'tags'){
+					var files= [];
+					$.getJSON("/tags.json",function(data){
+						$.each(data,function(key,val){
+							if ($("select option:selected").text() == key ){
+								files = val;
+								console.info("files:" + files);
+								return false;
+							}
+						});
+
+					}).done(function(){
+						files.forEach(function(elem){
+							$('#inner').append("<div> <img src='/download/" + elem + "' class='btn btn-link' /> " + elem  + "</div>");
+						});
+					});
+					return false;
+				}
+				else {
+					$('#inner').append("<div> <img src='/download/" + v + "' class='btn btn-link' /> " + v  + "</div>");
+				}
+			});
+		});
+	};
+	filesCall();
+		$( "select" ).change(function () {
+			var curtag = $("select option:selected").text();
+			$("select").empty();
+			$("select").append("<option>"+curtag+"</option>");
+			$(".inner").empty();
+			filesCall();
+		});
 	});
+
 </script>
 
